@@ -1,0 +1,22 @@
+{
+  "name": "stamp",
+  "version": "1.0.0",
+  "description": "A web application to send me a text message when new mail arrives",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XrayBravoGolf/STAMP.git"
+  },
+  "author": "xuxiaoyao213@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/XrayBravoGolf/STAMP/issues"
+  },
+  "homepage": "https://github.com/XrayBravoGolf/STAMP#readme",
+  "dependencies": {
+    "googleapis": "^101.0.0"
+  }
+}
