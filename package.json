@@ -2,9 +2,9 @@
   "name": "stamp",
   "version": "1.0.0",
   "description": "A web application to send me a text message when new mail arrives",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node index.mjs"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/XrayBravoGolf/STAMP#readme",
   "dependencies": {
+    "@google-cloud/pubsub": "^3.0.1",
+    "dotenv": "^16.0.1",
     "googleapis": "^101.0.0"
   }
 }
