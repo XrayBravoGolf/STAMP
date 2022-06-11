@@ -1,6 +1,12 @@
-const fs = require('fs');
-const readline = require('readline');
-const {google} = require('googleapis');
+import fs from "fs";
+import 'dotenv/config'
+import readline from "readline";
+import {google} from "googleapis";
+import { exit } from "process";
+import quickstart from "./pubsub.mjs";
+await quickstart();
+// pubsubhelloworld();
+exit();
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
