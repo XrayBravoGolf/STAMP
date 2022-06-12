@@ -10,9 +10,9 @@ async function quickstart(
     // Instantiates a client
     const pubsub = new PubSub({ projectId, keyFilename});
     const topic = pubsub.topic(topicNameOrId);
-    // const topic = pubsub.topic(topicNameOrId);
-    // const [subscription] = 
+    const subscription = pubsub.subscription(subscriptionName);
 
+    /*
     //   // Creates a new topic
     //   const [topic] = await pubsub.createTopic(topicNameOrId);
     //   console.log(`Topic ${topic.name} created.`);
@@ -29,7 +29,8 @@ async function quickstart(
         console.error('Received error:', error);
         process.exit(1);
     });
-
+*/
     // Send a message to the topic
-    topic.publish(Buffer.from('Test message!'));
+    topic.publishMessage({data:Buffer.from('Test message!')});
+    await new Promise(resolve => setTimeout(resolve, 5*1000));
 }
