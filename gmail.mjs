@@ -3,29 +3,29 @@ import readline from "readline/promises";
 import { google } from "googleapis";
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
-// TODO set SCOPES
-
-
-/**
- * @return {Promise<google.auth.OAuth2>} A promise that resolves to an authorized OAuth2 client.
- */
-const authorizeOAuthClient = async () => {
+const SCOPES = [
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/pubsub'
+];
     // The file token.json stores the user's access and refresh tokens, and is
     // created automatically when the authorization flow completes for the first
     // time.
     const TOKEN_PATH = 'secrets/token.json';
 
+/**
+ * @return {Promise<google.auth.OAuth2>} A promise that resolves to an authorized OAuth2 client.
+ */
+const authorizeOAuthClient = async () => {
     // Load client secrets from a local file.
-    let content;
+    let credentials;
     try {
-        content = await fs.readFile('secrets/credentials.json');
+        credentials = await fs.promises.readFile('secrets/credentials.json');
     } catch (err) {
         console.log('Error loading client secret file:', err);
         throw err;
     }
     // Authorize a client with credentials, then call the Gmail API.
-    return await authorize(JSON.parse(content));
+    return await authorize(JSON.parse(credentials));
 }
 
 /**
@@ -70,11 +70,12 @@ async function getNewToken(oAuth2Client) {
         const token = await oAuth2Client.getToken(code);
         oAuth2Client.setCredentials(token);
         // Store the token to disk for later program executions
-        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+        try {
+            await fs.promises.writeFile(TOKEN_PATH, JSON.stringify(token))
+        }catch (err) {
             if (err) return console.error(err);
-            console.log('Token stored to', TOKEN_PATH);
-        });
-        callback(oAuth2Client);
+        }
+        console.log('Token stored to', TOKEN_PATH);
     } catch (err) {
         console.error('Error retrieving access token', err);
         throw err;
@@ -82,13 +83,20 @@ async function getNewToken(oAuth2Client) {
     return oAuth2Client;
 }
 
+async function startWatching(auth) {
+    const gmail = google.gmail({ version: 'v1', auth });
+    gmail.users.watch({
+        topicName: process.env.CLOUDPROJ_TOPIC_ID,
+    });
+}
 /**
  * Lists the labels in the user's account.
  * @deprecated for demo only
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listLabels(auth) {
-    const gmail = google.gmail({ version: 'v1', auth });
+    google.options({auth: auth});
+    const gmail = google.gmail({ version: 'v1' });
     gmail.users.labels.list({
         userId: 'me',
     }, (err, res) => {
@@ -105,4 +113,4 @@ function listLabels(auth) {
     });
 }
 
-export { authorizeOAuthClient };
+export { authorizeOAuthClient, listLabels, startWatching };
