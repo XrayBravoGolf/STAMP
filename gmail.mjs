@@ -25,7 +25,7 @@ const authorizeOAuth = async () => {
         redirect_uris[0]
     );
     oauth2Client.on('tokens', (tokens) => {
-        await fs.promises.writeFile('secrets/token.json', JSON.stringify(tokens));
+        fs.writeFile('secrets/token.json', JSON.stringify(tokens));
     });
 
     let tokens;
