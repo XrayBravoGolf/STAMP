@@ -84,7 +84,7 @@ async function listLabels() {
     const res = await gmail.users.labels.list({
         // The user's email address. The special value `me` can be used to indicate the authenticated user.
         userId: 'me',
-      });
+    });
     const labels = res.data.labels;
     if (labels.length) {
         console.log('Labels:');
