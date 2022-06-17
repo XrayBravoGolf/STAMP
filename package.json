@@ -5,7 +5,8 @@
   "main": "index.mjs",
   "scripts": {
     "dev": "node index.mjs",
-    "test": "node test.mjs"
+    "test": "node test.mjs",
+    "oAuthRedir": "node oAuthRedir.mjs"
   },
   "repository": {
     "type": "git",
