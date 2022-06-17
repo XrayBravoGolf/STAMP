@@ -54,13 +54,21 @@ const authorizeOAuth = async () => {
     oauth2Client.setCredentials(tokens);
 
 }
-
-const startWatching = async (auth) => {
-    const gmail = google.gmail({ version: 'v1', auth });
-    gmail.users.watch({
-        topicName: process.env.CLOUDPROJ_TOPIC_ID,
+/**
+ * Expected to be called once every 24 hours
+ * @returns the current history id
+ */
+const startWatching = async () => {
+    const gmail = google.gmail({ version: 'v1', oauth2Client });
+    const res = await gmail.users.watch({
+        userId: 'me',
+        requestBody: {
+            labelIds: ['INBOX'],
+            topicName: process.env.CLOUDPROJ_TOPIC_ID,
+            labelFilterAction: 'include',
+        }
     });
-    //TODO
+    return res.data.historyId;
 }
 
 /**
