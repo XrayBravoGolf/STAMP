@@ -64,7 +64,7 @@ const startWatching = async () => {
     const res = await gmail.users.watch({
         userId: 'me',
         requestBody: {
-            labelIds: ['INBOX'],
+            labelIds: ['UNREAD'],
             topicName: process.env.CLOUDPROJ_TOPIC_ID,
             labelFilterAction: 'include',
         }
