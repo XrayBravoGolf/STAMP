@@ -25,7 +25,8 @@ const authorizeOAuth = async () => {
         redirect_uris[0]
     );
     oauth2Client.on('tokens', (tokens) => {
-        fs.writeFile('secrets/token.json', JSON.stringify(tokens));
+        console.log("got tokens, saving to file");
+        fs.writeFileSync('secrets/token.json', JSON.stringify(tokens));
     });
 
     let tokens;
@@ -75,23 +76,24 @@ const startWatching = async () => {
  * Lists the labels in the user's account.
  * @deprecated for demo only
  */
-function listLabels() {
+async function listLabels() {
     const auth = oauth2Client;
     google.options({ auth: auth });
     const gmail = google.gmail({ version: 'v1' });
-    gmail.users.labels.list({
+    // const res = await gmail.users.labels.list({ userId: 'me' });
+    const res = await gmail.users.labels.list({
+        // The user's email address. The special value `me` can be used to indicate the authenticated user.
         userId: 'me',
-    }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
-        const labels = res.data.labels;
-        if (labels.length) {
-            console.log('Labels:');
-            labels.forEach((label) => {
-                console.log(`- ${label.name}`);
-            });
-        } else {
-            console.log('No labels found.');
-        }
-    });
+      });
+    const labels = res.data.labels;
+    if (labels.length) {
+        console.log('Labels:');
+        labels.forEach((label) => {
+            console.log(`- ${label.name}`);
+        });
+    } else {
+        console.log('No labels found.');
+    }
+
 }
 export { authorizeOAuth, listLabels, startWatching };
