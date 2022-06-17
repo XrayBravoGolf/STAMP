@@ -11,6 +11,6 @@ await authorize();
 let history = await startWatching();
 setHistoryId(history);
 // call watch and refresh the history id every 24 hours
-setInterval(async () => { 
+setInterval(async () => {
     setHistoryId(await startWatching());
 }, 24 * 60 * 60 * 1000);
