@@ -40,12 +40,21 @@ const tokenVerification = async (req, res, next) => {
     }
     next();
 }
+const pushHandler = (req, res) => {
+    const messageRaw = req.body?.message?.data?.toString();
+    if (!message) {
+        res.status(400).end();
+    }
+    const message = JSON.parse(Buffer.from(messageRaw, 'base64'));
+    // todo process new message ids
+    console.log(message);
+}
+
 export const startWebHookServer = (port) => {
     const app = express()
+    app.use(express.json()); // for parsing application/json
     // app.use(compression())
-    app.post("/newMail", (req, res) => {
-        //todo handle the sub
-    });
+    app.post("/newMail", tokenVerification, pushHandler);
     const httpsServer = https.createServer({
         key: fs.readFileSync(process.env.WEBHOOK_SVR_PKEY),
         cert: fs.readFileSync(process.env.WEBHOOK_SVR_CERT),
