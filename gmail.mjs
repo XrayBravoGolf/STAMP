@@ -76,7 +76,7 @@ const startWatching = async () => {
 
 
 /**
- * 
+ * a function to get all updates since given history id
  */
 const getHistory = async (prevHistory) => {
     const gmail = google.gmail({ version: 'v1', oauth2Client });
