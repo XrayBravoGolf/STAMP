@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { startWebHookServer } from './server.mjs'
-import { authorizeOAuth, listLabels, startWatching } from './gmail.mjs';
+import { authorizeOAuth, listLabels, startWatching, stopWatching } from './gmail.mjs';
 import { setHistoryId } from './history.mjs'; //! STATEFUL SINGLEGTON
 
 const PORT = 8443;
@@ -14,3 +14,9 @@ setInterval(async () => {
     setHistoryId(await startWatching());
 }, 24 * 60 * 60 * 1000);
 */
+// stop gmail watch on SIGINT
+process.on('SIGINT', async () => {
+    console.log('SIGINT received, stopping gmail watch');
+    await stopWatching();
+    process.exit();
+});

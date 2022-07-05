@@ -74,6 +74,16 @@ const startWatching = async () => {
     return res.data.historyId;
 }
 
+/**
+ * stops the gmail watch
+ */
+const stopWatching = async () => {
+    const gmail = google.gmail({ version: 'v1', oauth2Client });
+    const res = await gmail.users.stop({
+        userId: 'me',
+    });
+    console.log(res.data);
+}
 
 /**
  * a function to get all updates since given history id
@@ -110,4 +120,4 @@ async function listLabels() {
     }
 
 }
-export { authorizeOAuth, listLabels, startWatching };
+export { authorizeOAuth, listLabels, startWatching, stopWatching, getHistory };
