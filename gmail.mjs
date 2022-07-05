@@ -36,7 +36,9 @@ const authorizeOAuth = async () => {
         tokens = undefined;
     }
     //get new token if we don't have one
-    if (!(tokens?.access_token && tokens?.refresh_token)) {
+    let expired = tokens?.expiry_date < (Math.floor(new Date() / 1000));
+    let hasRefreshtoken = tokens?.refresh_token ? true : false;
+    if (!(tokens?.access_token) || (expired && !hasRefreshtoken)) {
         // generate a url that asks permissions for Blogger and Google Calendar scopes
         const url = oauth2Client.generateAuthUrl({
             access_type: 'offline',
@@ -72,6 +74,18 @@ const startWatching = async () => {
     return res.data.historyId;
 }
 
+
+/**
+ * 
+ */
+const getHistory = async (prevHistory) => {
+    const gmail = google.gmail({ version: 'v1', oauth2Client });
+    const res = await gmail.users.history.list({
+        userId: 'me',
+        historyId: prevHistory,
+    });
+    return res.data.history;
+}
 /**
  * Lists the labels in the user's account.
  * @deprecated for demo only
@@ -81,7 +95,7 @@ async function listLabels() {
     google.options({ auth: auth });
     const gmail = google.gmail({ version: 'v1' });
     // const res = await gmail.users.labels.list({ userId: 'me' });
-    const res = await gmail.users.labels.list({
+    const res = await gmail.users.labels.list({ //* API CALL
         // The user's email address. The special value `me` can be used to indicate the authenticated user.
         userId: 'me',
     });
